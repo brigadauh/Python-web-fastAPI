@@ -2,24 +2,6 @@ from fastapi import APIRouter, Request
 import weather_controller as controller
 from pydantic import BaseModel
 
-# from functools import wraps
-# from flask import jsonify,Response, request
-# import os
-# import datetime
-# import os.path
-# import db
-# import json
-# import requests
-# import dispatcher
-
-# import forecast
-# import testviews
-# import temphumidity_view
-
-
-
-
-
 class WeatherCurrent(BaseModel):
     t: str = None
     h: str = None
