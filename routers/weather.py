@@ -22,6 +22,9 @@ def temphumidity_get_current(output: str = ''):
 @weather.get('/api/weather/forecast')
 def forecast_handler():
     return controller.get_latest_forecast()
+@weather.get('/api/weather/history/barometerHumidity')
+def history_barometer_humidity_handler():
+    return controller.get_barometer_history()
 
 @weather.post('/api/weather/temphumidity/add')
 def temphumidity_add(request: WeatherCurrent):

@@ -40,7 +40,30 @@ def get_current():
 def get_currentXML():
     resp = dicttoxml(get_current())
     return Response(content=resp, media_type="application/xml")
-
+def get_barometer_history():
+    daysBack = 3
+    conn = db.open()
+    cursor = conn.cursor()
+    args = [daysBack]
+    cursor.callproc('api_get_barometer_data', args)
+    rows = cursor.fetchall()
+    respObj={}
+    respObj["status"]="ok"
+    dataObj=[]
+    for row in rows:
+        var_date=row[0]
+        var_barometer=row[1]
+        var_humidity=row[2]
+        dataItem={}
+        dataItem["timeStamp"]=str(var_date)
+        dataItem["barometer"]=var_barometer
+        dataItem["humidity"]=var_humidity        
+        dataObj.append(dataItem)
+    respObj["data"]=dataObj
+    cursor.close()
+    conn.close()
+    return respObj
+    
 def get_latest_forecast():
     currentDT = str(datetime.datetime.now())
     conn = db.open()
@@ -51,13 +74,9 @@ def get_latest_forecast():
     cursor.callproc('api_get_forecast_data', args)
     print(cursor.fetchone);
     rows = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
     respObj={}
     respObj["status"]="ok"
     dataObj=[]
-
     for row in rows:
         var_forecast_date=row[0]
         var_forecast_data=row[1]
@@ -67,6 +86,8 @@ def get_latest_forecast():
         dataObj.append(dataItem)
 
     respObj["data"]=dataObj
+    cursor.close()
+    conn.close()
     return respObj
 
 def add(request):

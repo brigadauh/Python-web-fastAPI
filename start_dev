@@ -1,1 +1,1 @@
-uvicorn --host 0.0.0.0 fastapi_code:app --reload
+uvicorn --host 0.0.0.0 --port 8890 fastapi_code:app --reload
