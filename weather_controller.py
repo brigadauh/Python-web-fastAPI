@@ -89,7 +89,11 @@ def get_latest_forecast():
     cursor.close()
     conn.close()
     return respObj
-
+def get_settings_timezone(response):
+    zone=response.zone
+    respObj = {}
+    respObj["zone"] = zone
+    return  respObj
 def add(request):
 
     temp = request.t

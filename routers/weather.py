@@ -9,24 +9,28 @@ class WeatherCurrent(BaseModel):
     p: str = None
     s: str = ''
 
-path = '/api/weather/temphumidity'
+weather_path = '/api/weather'
 weather = APIRouter()
 
 ##################### weather data
-@weather.get(path + '/current')
+@weather.get(weather_path + '/temphumidity/current')
 def temphumidity_get_current(output: str = ''):
     if (output.lower()) == 'xml':
         return controller.get_currentXML()
     return controller.get_current()
 
-@weather.get('/api/weather/forecast')
+@weather.get(weather_path + '/forecast')
 def forecast_handler():
     return controller.get_latest_forecast()
-@weather.get('/api/weather/history/barometerHumidity')
+@weather.get(weather_path + '/history/barometerHumidity')
 def history_barometer_humidity_handler():
     return controller.get_barometer_history()
 
-@weather.post('/api/weather/temphumidity/add')
+@weather.get(weather_path + '/settings/timezone')
+def settings_timezone_handler():
+    return controller.get_settings_timezone()
+
+@weather.post(weather_path + '/temphumidity/add')
 def temphumidity_add(request: WeatherCurrent):
     # print('request--------->:', request.json())
     # print('temp--------->:', request.t, request.h, request.d, request.p, request.s)
