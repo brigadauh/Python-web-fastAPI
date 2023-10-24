@@ -27,8 +27,14 @@ def history_barometer_humidity_handler():
     return controller.get_barometer_history()
 
 @weather.get(weather_path + '/settings/timezone')
-def settings_timezone_handler():
-    return controller.get_settings_timezone()
+def settings_timezone_handler(request: Request):
+    return controller.get_timezone(request)
+@weather.get(weather_path + '/settings/timezone-list')
+def settings_timezone_list_handler():
+    return controller.get_timezone_list()
+@weather.get(weather_path + '/settings/timezone_async')
+async def settings_timezone_handler_async(request: Request):
+    await controller.get_settings_timezone_async(request)
 
 @weather.post(weather_path + '/temphumidity/add')
 def temphumidity_add(request: WeatherCurrent):

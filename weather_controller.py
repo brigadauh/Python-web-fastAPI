@@ -2,8 +2,11 @@ from fastapi import Request, Response
 from dicttoxml import dicttoxml
 from pydantic import BaseModel
 import db
+import json
 import datetime
-
+import httpx
+import asyncio
+import requests
     
 def get_current():
     conn = db.open()
@@ -89,11 +92,32 @@ def get_latest_forecast():
     cursor.close()
     conn.close()
     return respObj
-def get_settings_timezone(response):
-    zone=response.zone
-    respObj = {}
-    respObj["zone"] = zone
+def get_timezone_list():
+    apiKey = 'S5AW0I7AMXXL'
+    URL="https://api.timezonedb.com/v2.1/list-time-zone?key=" + apiKey + "&format=json"
+ 
+    timezone = requests.get(URL)
+    timezone_data= timezone.content.decode("utf-8")
+    timezone_obj=json.loads(timezone_data)
+    print(timezone_obj)
+
+
+    respObj = timezone_obj
     return  respObj
+def get_timezone(request1):
+    apiKey = 'S5AW0I7AMXXL'
+    zone = 'New_York'
+    URL="https://api.timezonedb.com/v2.1/get-time-zone?key=" + apiKey + "&format=json&by=zone&zone=" + zone
+ 
+    timezone = requests.get(URL)
+    timezone_data= timezone.content.decode("utf-8")
+    timezone_obj=json.loads(timezone_data)
+    print(timezone_obj)
+
+
+    respObj = timezone_obj
+    return  respObj
+
 def add(request):
 
     temp = request.t
@@ -126,4 +150,19 @@ def add(request):
 
 def delete(data):
     return '{"status":"failed", "err":"not implemented","data":[]}'
-    
+
+async def request(client):
+    apiKey = 'S5AW0I7AMXXL'
+    zone = 'New_York'
+    #URL="https://api.timezonedb.com/v2.1/get-time-zone?key=" + apiKey + "&format=json&by=zone&zone=" + zone
+    URL="http://httpbin.org/uuid"
+    response = await client.get(URL)
+    return response.text
+async def get_settings_timezone_async(request1):
+    async with httpx.AsyncClient() as client:
+        tasks = [request(client) for i in range(2)]
+        result = await asyncio.gather(*tasks)
+        print(result)
+    respObj = {}
+    respObj["zone"] = "TEST"
+    return  respObj    
