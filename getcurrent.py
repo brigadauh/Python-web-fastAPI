@@ -2,6 +2,7 @@ import db
 import json
 import datetime
 import requests
+from routers.weather import WeatherCurrent
 import weather_controller as temphumidity
 
 
@@ -16,13 +17,13 @@ def get_current_from_station():
     tempC = weather_main["temp"]-273
     pressureGPa = weather_main["pressure"]
     humidity = weather_main["humidity"]
-    print('weather_main', weather_main)
-    dataObj={}
-    dataObj["t"] = tempC
-    dataObj["h"] = humidity
-    dataObj["d"] = str(datetime.datetime.now())
-    dataObj["s"] = "web"
-    dataObj["p"] = pressureGPa
+    #print('weather_main', weather_main)
+    dataObj = WeatherCurrent()
+    dataObj.t = tempC
+    dataObj.h = humidity
+    dataObj.d = str(datetime.datetime.now())
+    dataObj.s = "web"
+    dataObj.p = pressureGPa
     return temphumidity.add(dataObj)
 
 s = get_current_from_station()
