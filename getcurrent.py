@@ -2,6 +2,7 @@ import db
 import json
 import datetime
 import requests
+import logging
 from routers.weather import WeatherCurrent
 import weather_controller as temphumidity
 
@@ -26,4 +27,8 @@ def get_current_from_station():
     dataObj.p = pressureGPa
     return temphumidity.add(dataObj)
 
-s = get_current_from_station()
+logging.basicConfig(filename='current_error.log', level=logging.ERROR)
+try:
+    s = get_current_from_station()
+except Exception as e:
+    logging.error(f"Error: {e}", exc_info=True)
